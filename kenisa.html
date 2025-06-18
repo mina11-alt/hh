@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>كنيسة مارمينا والأنبا توماس</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --main-bg: #f5f5f5;
+      --main-color: #333;
+      --container-bg: #fff;
+      --sidebar-bg: #222;
+      --sidebar-color: #fff;
+      --sidebar-hover: #444;
+      --button-bg: #e0e0e0;
+      --button-color: #333;
+      --button-hover: #d1c4e9;
+      --input-bg: #fff;
+      --input-color: #333;
+      --border-radius: 24px;
+      --shadow: 0 2px 16px rgba(0,0,0,0.07);
+      --accent: #b71c1c;
+      --link: #007bff;
+      --admin-color: #ffd600;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--main-bg);
+      color: var(--main-color);
+      transition: background 0.3s, color 0.3s, opacity 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    body.fade-out {
+      opacity: 0;
+      transform: scale(0.98) translateY(20px);
+    }
+    .auth-container, .dashboard {
+      max-width: 900px;
+      margin: 32px auto;
+      background: var(--container-bg);
+      padding: 32px 24px 24px 24px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      transition: background 0.3s, color 0.3s;
+    }
+    .dashboard {
+      display: block;
+    }
+    .sidebar {
+      width: 220px;
+      float: right;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-color);
+      height: 100vh;
+      padding: 24px 16px 24px 8px;
+      box-sizing: border-box;
+      border-radius: var(--border-radius);
+      margin-left: 24px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 32px 0 0 0;
+    }
+    .sidebar ul li {
+      margin-bottom: 18px;
+    }
+    .sidebar ul li button, .sidebar ul li a {
+      color: var(--sidebar-color);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      width: 100%;
+      text-align: right;
+      padding: 10px 12px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+      display: block;
+    }
+    .sidebar ul li button:hover, .sidebar ul li a:hover {
+      background: var(--sidebar-hover);
+    }
+    .sidebar ul li#admin-panel-link {
+      color: var(--admin-color);
+      font-weight: bold;
+    }
+    .sidebar ul li#admin-panel-link i {
+      margin-left: 5px;
+    }
+    .sidebar ul li#logout-btn i {
+      margin-left: 6px;
+    }
+    .main-content {
+      margin-right: 250px;
+      padding: 32px 24px;
+      background: transparent;
+      border-radius: var(--border-radius);
+      min-height: 70vh;
+      transition: background 0.3s, color 0.3s;
+    }
+    .user-info img {
+      width: 80px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .user-info #user-name {
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+    .container {
+      background: rgba(255,255,255,0.7);
+      border-radius: 16px;
+      padding: 18px 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+      transition: background 0.3s;
+    }
+    .container h2 {
+      color: var(--accent);
+      margin-bottom: 16px;
+      font-size: 22px;
+    }
+    .date-section {
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+    input[type="date"] {
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: var(--input-bg);
+      color: var(--input-color);
+      font-size: 16px;
+      margin-top: 6px;
+      transition: background 0.3s, color 0.3s;
+    }
+    button {
+      background: var(--button-bg);
+      color: var(--button-color);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 16px;
+      margin: 0 4px 8px 0;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    button:hover {
+      background: var(--button-hover);
+      color: var(--accent);
+    }
+    .font-size-controls {
+      margin: 18px 0 10px 0;
+    }
+    .error-message {
+      color: #d32f2f;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .toggle-text {
+      margin-top: 15px;
+    }
+    .toggle-text a {
+      cursor: pointer;
+      color: var(--link);
+      text-decoration: underline;
+    }
+    body.dark-mode {
+      --main-bg: #18191a;
+      --main-color: #e0e0e0;
+      --container-bg: #23272b;
+      --sidebar-bg: #23272b;
+      --sidebar-color: #ffd600;
+      --sidebar-hover: #393e46;
+      --button-bg: #33343a;
+      --button-color: #ffd600;
+      --button-hover: #444654;
+      --input-bg: #23272b;
+      --input-color: #ffd600;
+      --shadow: 0 2px 16px rgba(0,0,0,0.18);
+      --accent: #ffd600;
+      --link: #ffb300;
+      --admin-color: #ffd600;
+    }
+    body.dark-mode .container {
+      background: rgba(34,34,34,0.85);
+    }
+    body.dark-mode .sidebar ul li#admin-panel-link {
+      color: #ffd600;
+    }
+    body.dark-mode .sidebar ul li button,
+    body.dark-mode .sidebar ul li a {
+      color: #ffd600;
+    }
+    body.dark-mode .sidebar ul li button:hover,
+    body.dark-mode .sidebar ul li a:hover {
+      background: #444654;
+      color: #fff;
+    }
+    body.dark-mode .user-info img {
+      border: 2px solid #ffd600;
+    }
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        float: none;
+        margin: 0 0 24px 0;
+        border-radius: 24px;
+      }
+      .main-content {
+        margin-right: 0;
+        padding: 20px 6px;
+      }
+    }
+    @media (max-width: 600px) {
+      .auth-container, .dashboard {
+        padding: 10px 2px;
+        border-radius: 14px;
+      }
+      .main-content {
+        padding: 10px 2px;
+      }
+      .container {
+        padding: 8px 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="dashboard" class="dashboard">
+    <aside class="sidebar">
+
+     
+      <ul>
+        <li><button id="settings-btn">الصفحه الرائسيه</button></li>
+        <li><a href="kodas.html" id="kodas" target="_self">القداس</a></li>
+        <li><a href="alhan.html" id="alhan"target="_self">المردات و الالحان</a> </li>
+        <li><a href="schedule.html" id="schedule-btn" target="_self">اختيار المواعيد</a></li>
+        <li>
+          <button id="darkModeToggle" class="dark-mode-toggle">تبديل الوضع الداكن</button>
+        </li>
+        <li id="admin-panel-link" style="display:none; cursor:pointer;">
+          <i class="fas fa-user-shield"></i> لوحة الأدمن
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="container">
+        <h2>التقويم اليومي</h2>
+        <div class="date-section" id="gregorianDate">التاريخ الميلادي: ...</div>
+        <div class="date-section" id="copticDate">التاريخ القبطي: ...</div>
+        <input type="date" id="datePicker" />
+        <br />
+        <button onclick="setToday()">الرجوع لتاريخ اليوم</button>
+      </div>
+
+      <img src="images/صوره الكنيسه.jpeg" width="455" >
+
+      <section id="settings-section" class="content-section" style="margin-top:30px;">
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // الوضع الداكن
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    function setDarkMode(state) {
+      if(state) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'on');
+      } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'off');
+      }
+    }
+    darkModeToggle.addEventListener('click', () => {
+      setDarkMode(!document.body.classList.contains('dark-mode'));
+    });
+    if(localStorage.getItem('darkMode') === 'on') {
+      document.body.classList.add('dark-mode');
+    }
+
+    // التاريخ القبطي والميلادي
+    const gregorianDateElem = document.getElementById('gregorianDate');
+    const copticDateElem = document.getElementById('copticDate');
+    const datePicker = document.getElementById('datePicker');
+
+    const copticMonths = [
+      "توت", "بابه", "هاتور", "كيهك", "طوبه", "أمشير",
+      "برمهات", "برموده", "بشنس", "بؤونه", "أبيب", "مسرى", "النسئ"
+    ];
+
+    // دالة التحويل المصححة
+    function gregorianToCoptic(gDate) {
+      const gYear = gDate.getFullYear();
+      // تحقق من بداية النيروز (11 أو 12 سبتمبر)
+      let copticNewYear = new Date(gYear, 8, 11); // 11 سبتمبر افتراضيًا
+      if (
+        (gYear % 4 === 3 && gYear > 1900) ||
+        (gYear === 2100)
+      ) {
+        copticNewYear = new Date(gYear, 8, 12); // 12 سبتمبر
+      }
+
+      let cYear, cMonth, cDay;
+      if (gDate >= copticNewYear) {
+        cYear = gYear - 283;
+        const diffDays = Math.floor((gDate - copticNewYear) / (1000 * 60 * 60 * 24));
+        cMonth = Math.floor(diffDays / 30) + 1;
+        cDay = (diffDays % 30) + 1;
+      } else {
+        let prevCopticNewYear = new Date(gYear - 1, 8, 11);
+        if (
+          ((gYear - 1) % 4 === 3 && gYear - 1 > 1900) ||
+          (gYear - 1 === 2100)
+        ) {
+          prevCopticNewYear = new Date(gYear - 1, 8, 12);
+        }
+        cYear = gYear - 284;
+        const diffDays = Math.floor((gDate - prevCopticNewYear) / (1000 * 60 * 60 * 24));
+        cMonth = Math.floor(diffDays / 30) + 1;
+        cDay = (diffDays % 30) + 1;
+      }
+      if (cMonth > 13) {
+        cMonth = 13;
+        if (cDay > 6) cDay = 6;
+      }
+      return {
+        year: cYear,
+        month: copticMonths[cMonth - 1],
+        day: cDay
+      };
+    }
+
+    function updateDates(date) {
+      const gDate = new Date(date);
+      gregorianDateElem.textContent = `التاريخ الميلادي: ${gDate.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      const copticDate = gregorianToCoptic(gDate);
+      copticDateElem.textContent = `التاريخ القبطي: ${copticDate.day} ${copticDate.month} ${copticDate.year} ش`;
+    }
+
+    datePicker.addEventListener('change', (e) => {
+      updateDates(e.target.value);
+    });
+
+    function setToday() {
+      const today = new Date();
+      datePicker.valueAsDate = today;
+      updateDates(today);
+    }
+
+    window.onload = () => {
+      setToday();
+    };
+
+    // تأثير بصري عند الانتقال بين الصفحات
+    document.querySelectorAll('a, button').forEach(function(el) {
+      if (el.tagName === 'A' && el.href && !el.href.startsWith('javascript') && el.getAttribute('href') !== '#') {
+        el.addEventListener('click', function(e) {
+          if (el.target !== '_blank' && !el.hasAttribute('download')) {
+            e.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(function() {
+              window.location = el.href;
+            }, 500);
+          }
+        });
+      }
+      if (el.tagName === 'BUTTON' && el.id === 'settings-btn') {
+        el.addEventListener('click', function(e) {
+          document.body.classList.add('fade-out');
+          setTimeout(function() {
+            window.location = 'index.html';
+          }, 500);
+        });
+      }
+    });
+
+    window.addEventListener('pageshow', function() {
+      document.body.classList.remove('fade-out');
+    });
+  </script>
+</body>
+</html>
